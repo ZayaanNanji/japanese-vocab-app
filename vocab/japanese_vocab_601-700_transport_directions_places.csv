@@ -1,0 +1,101 @@
+﻿No,Japanese,Romaji,Meaning
+601,駅,eki,station
+602,電車,densha,train
+603,地下鉄,chikatetsu,subway
+604,バス,basu,bus
+605,タクシー,takushii,taxi
+606,自転車,jitensha,bicycle
+607,車,kuruma,car
+608,バイク,baiku,motorcycle
+609,飛行機,hikouki,airplane
+610,船,fune,boat / ship
+611,新幹線,shinkansen,bullet train
+612,切符,kippu,ticket
+613,定期券,teikiken,commuter pass
+614,ICカード,aishii kaado,IC card
+615,Suica,suika,Suica card
+616,Pasmo,pasumo,Pasmo card
+617,改札,kaisatsu,ticket gate
+618,ホーム,hoomu,platform
+619,乗り場,noriba,boarding point
+620,バス停,basutei,bus stop
+621,時刻表,jikokuhyou,timetable
+622,片道,katamichi,one way
+623,往復,oufuku,round trip
+624,普通,futsuu,local train
+625,快速,kaisoku,rapid train
+626,急行,kyuukou,express train
+627,特急,tokkyuu,limited express
+628,各駅停車,kakueki teisha,local train stopping all stations
+629,乗り換え,norikae,transfer
+630,出発,shuppatsu,departure
+631,到着,touchaku,arrival
+632,遅延,chien,delay
+633,運休,unkyuu,service suspended
+634,満員,man’in,full / crowded
+635,空いています,suite imasu,not crowded / empty
+636,混んでいます,konde imasu,crowded
+637,近い,chikai,near
+638,遠い,tooi,far
+639,右,migi,right
+640,左,hidari,left
+641,まっすぐ,massugu,straight
+642,前,mae,front
+643,後ろ,ushiro,back / behind
+644,上,ue,up / above
+645,下,shita,down / below
+646,中,naka,inside
+647,外,soto,outside
+648,隣,tonari,next to
+649,近く,chikaku,nearby
+650,向かい,mukai,opposite side
+651,角,kado,corner
+652,交差点,kousaten,intersection
+653,信号,shingou,traffic light
+654,道,michi,road / way
+655,道路,douro,road
+656,橋,hashi,bridge
+657,公園,kouen,park
+658,病院,byouin,hospital
+659,クリニック,kurinikku,clinic
+660,銀行,ginkou,bank
+661,郵便局,yuubinkyoku,post office
+662,交番,kouban,police box
+663,市役所,shiyakusho,city hall
+664,区役所,kuyakusho,ward office
+665,図書館,toshokan,library
+666,学校,gakkou,school
+667,会社,kaisha,company
+668,レストラン,resutoran,restaurant
+669,カフェ,kafe,cafe
+670,ホテル,hoteru,hotel
+671,空港,kuukou,airport
+672,駐車場,chuushajou,parking lot
+673,駐輪場,chuurinjou,bicycle parking
+674,住所,juusho,address
+675,場所,basho,place
+676,ここ,koko,here
+677,そこ,soko,there near you
+678,あそこ,asoko,over there
+679,どこ,doko,where
+680,こちら,kochira,"this way / here, polite"
+681,そちら,sochira,"that way, polite"
+682,あちら,achira,"over there, polite"
+683,どちら,dochira,"which way / where, polite"
+684,何番線,nanban-sen,which platform line
+685,何口,nan-guchi,which exit
+686,東口,higashi-guchi,east exit
+687,西口,nishi-guchi,west exit
+688,南口,minami-guchi,south exit
+689,北口,kita-guchi,north exit
+690,中央口,chuuou-guchi,central exit
+691,出口,deguchi,exit
+692,入口,iriguchi,entrance
+693,階,kai,floor number
+694,一階,ikkai,first floor
+695,二階,nikai,second floor
+696,地下一階,chika ikkai,basement first floor
+697,エスカレーター,esukareetaa,escalator
+698,階段,kaidan,stairs
+699,地図,chizu,map
+700,迷いました,mayoimashita,I got lost

@@ -1,0 +1,72 @@
+[
+  {
+    "file": "japanese_vocab_001-100_people_family_identity_basics.csv",
+    "title": "People & Identity",
+    "subtitle": "People, family and identity basics",
+    "icon": "人",
+    "accent": "#e5664f"
+  },
+  {
+    "file": "japanese_vocab_101-200_daily_verbs.csv",
+    "title": "Daily Verbs",
+    "subtitle": "Essential actions for everyday life",
+    "icon": "動",
+    "accent": "#597b70"
+  },
+  {
+    "file": "japanese_vocab_201-300_time_days_schedule.csv",
+    "title": "Time & Schedule",
+    "subtitle": "Days, dates, time and planning",
+    "icon": "時",
+    "accent": "#d49a3a"
+  },
+  {
+    "file": "japanese_vocab_301-400_home_daily_objects.csv",
+    "title": "Home & Objects",
+    "subtitle": "Your home and everyday things",
+    "icon": "家",
+    "accent": "#7b6ba8"
+  },
+  {
+    "file": "japanese_vocab_401-500_food_cooking_eating.csv",
+    "title": "Food & Eating",
+    "subtitle": "Food, cooking and eating out",
+    "icon": "食",
+    "accent": "#c56f48"
+  },
+  {
+    "file": "japanese_vocab_501-600_shopping_money_convenience_store.csv",
+    "title": "Shopping & Money",
+    "subtitle": "Shops, prices and convenience stores",
+    "icon": "買",
+    "accent": "#4c8391"
+  },
+  {
+    "file": "japanese_vocab_601-700_transport_directions_places.csv",
+    "title": "Travel & Places",
+    "subtitle": "Transport, directions and locations",
+    "icon": "駅",
+    "accent": "#5472a0"
+  },
+  {
+    "file": "japanese_vocab_701-800_body_health_feelings.csv",
+    "title": "Body & Health",
+    "subtitle": "The body, health and feelings",
+    "icon": "体",
+    "accent": "#b45d76"
+  },
+  {
+    "file": "japanese_vocab_801-900_conversation_adjectives_descriptions.csv",
+    "title": "Conversation",
+    "subtitle": "Useful replies, adjectives and descriptions",
+    "icon": "話",
+    "accent": "#6b7f45"
+  },
+  {
+    "file": "japanese_vocab_901-1000_work_school_admin_phone_emergencies.csv",
+    "title": "Work & Essentials",
+    "subtitle": "School, admin, phone and emergencies",
+    "icon": "学",
+    "accent": "#8c654e"
+  }
+]

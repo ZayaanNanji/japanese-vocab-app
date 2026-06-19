@@ -1,0 +1,101 @@
+﻿No,Japanese,Romaji,Meaning
+901,日本語,nihongo,Japanese language
+902,英語,eigo,English
+903,言葉,kotoba,word / language
+904,意味,imi,meaning
+905,文,bun,sentence
+906,質問,shitsumon,question
+907,答え,kotae,answer
+908,会話,kaiwa,conversation
+909,練習,renshuu,practice
+910,宿題,shukudai,homework
+911,テスト,tesuto,test
+912,試験,shiken,exam
+913,勉強,benkyou,study
+914,授業,jugyou,class / lesson
+915,教科書,kyoukasho,textbook
+916,ノート,nooto,notebook
+917,ペン,pen,pen
+918,鉛筆,enpitsu,pencil
+919,消しゴム,keshigomu,eraser
+920,紙,kami,paper
+921,辞書,jisho,dictionary
+922,翻訳,hon’yaku,translation
+923,発音,hatsuon,pronunciation
+924,漢字,kanji,kanji
+925,ひらがな,hiragana,hiragana
+926,カタカナ,katakana,katakana
+927,読み方,yomikata,how to read
+928,書き方,kakikata,how to write
+929,使い方,tsukaikata,how to use
+930,仕事,shigoto,work
+931,会議,kaigi,meeting
+932,予定,yotei,schedule
+933,連絡,renraku,contact
+934,報告,houkoku,report
+935,相談,soudan,consultation / discussion
+936,確認,kakunin,confirmation / checking
+937,説明,setsumei,explanation
+938,資料,shiryou,materials / documents
+939,書類,shorui,documents
+940,申請,shinsei,application
+941,手続き,tetsuzuki,procedure
+942,登録,touroku,registration
+943,住所,juusho,address
+944,氏名,shimei,full name
+945,生年月日,seinengappi,date of birth
+946,国籍,kokuseki,nationality
+947,在留カード,zairyuu kaado,residence card
+948,在留資格,zairyuu shikaku,visa status / residence status
+949,住民票,juuminhyou,residence certificate
+950,マイナンバー,mai nanbaa,My Number
+951,保険,hoken,insurance
+952,年金,nenkin,pension
+953,税金,zeikin,tax
+954,銀行口座,ginkou kouza,bank account
+955,印鑑,inkan,personal seal
+956,サイン,sain,signature
+957,パスポート,pasupooto,passport
+958,免許証,menkyoshou,driver’s license
+959,番号,bangou,number
+960,窓口,madoguchi,service counter
+961,受付番号,uketsuke bangou,reception number
+962,順番,junban,turn / order
+963,待合室,machiaishitsu,waiting room
+964,必要書類,hitsuyou shorui,required documents
+965,コピー,kopii,copy
+966,原本,genpon,original document
+967,提出,teishutsu,submission
+968,記入,kinyuu,filling in a form
+969,署名,shomei,signature
+970,電話,denwa,phone
+971,メール,meeru,email
+972,メッセージ,messeeji,message
+973,LINE,rain,LINE app
+974,アプリ,apuri,app
+975,写真,shashin,photo
+976,動画,douga,video
+977,画面,gamen,screen
+978,パスワード,pasuwaado,password
+979,ログイン,roguin,login
+980,ログアウト,roguauto,logout
+981,充電,juuden,charging
+982,電波,denpa,signal
+983,Wi-Fi,waifai,Wi-Fi
+984,インターネット,intaanetto,internet
+985,故障,koshou,breakdown / malfunction
+986,問題,mondai,problem
+987,エラー,eraa,error
+988,助けてください,tasukete kudasai,please help me
+989,困っています,komatte imasu,I’m in trouble
+990,警察,keisatsu,police
+991,交番,kouban,police box
+992,落とし物,otoshimono,lost item
+993,忘れ物,wasuremono,forgotten item
+994,財布をなくしました,saifu o nakushimashita,I lost my wallet
+995,道に迷いました,michi ni mayoimashita,I’m lost
+996,火事,kaji,fire
+997,地震,jishin,earthquake
+998,台風,taifuu,typhoon
+999,避難,hinan,evacuation
+1000,非常口,hijouguchi,emergency exit

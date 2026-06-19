@@ -1,0 +1,17 @@
+{
+  "name": "Kotoba — Japanese Vocabulary",
+  "short_name": "Kotoba",
+  "description": "Learn 1,000 essential Japanese words in focused ten-word lessons.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7f4ec",
+  "theme_color": "#f7f4ec",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

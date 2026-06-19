@@ -1,0 +1,101 @@
+﻿No,Japanese,Romaji,Meaning
+401,食べ物,tabemono,food
+402,飲み物,nomimono,drink
+403,ご飯,gohan,rice / meal
+404,朝ご飯,asagohan,breakfast
+405,昼ご飯,hirugohan,lunch
+406,晩ご飯,bangohan,dinner
+407,夕食,yuushoku,dinner
+408,米,kome,uncooked rice
+409,白米,hakumai,white rice
+410,玄米,genmai,brown rice
+411,パン,pan,bread
+412,麺,men,noodles
+413,うどん,udon,udon noodles
+414,そば,soba,soba noodles
+415,ラーメン,raamen,ramen
+416,パスタ,pasuta,pasta
+417,肉,niku,meat
+418,牛肉,gyuuniku,beef
+419,豚肉,butaniku,pork
+420,鶏肉,toriniku,chicken
+421,魚,sakana,fish
+422,卵,tamago,egg
+423,野菜,yasai,vegetables
+424,果物,kudamono,fruit
+425,りんご,ringo,apple
+426,バナナ,banana,banana
+427,みかん,mikan,mandarin orange
+428,いちご,ichigo,strawberry
+429,ぶどう,budou,grapes
+430,トマト,tomato,tomato
+431,じゃがいも,jagaimo,potato
+432,玉ねぎ,tamanegi,onion
+433,にんじん,ninjin,carrot
+434,キャベツ,kyabetsu,cabbage
+435,レタス,retasu,lettuce
+436,きゅうり,kyuuri,cucumber
+437,なす,nasu,eggplant
+438,ほうれん草,hourensou,spinach
+439,大根,daikon,daikon radish
+440,ねぎ,negi,green onion
+441,にんにく,ninniku,garlic
+442,生姜,shouga,ginger
+443,油,abura,oil
+444,塩,shio,salt
+445,砂糖,satou,sugar
+446,醤油,shouyu,soy sauce
+447,味噌,miso,miso
+448,酢,su,vinegar
+449,ソース,soosu,sauce
+450,カレー,karee,curry
+451,牛乳,gyuunyuu,milk
+452,水,mizu,water
+453,お茶,ocha,tea
+454,コーヒー,koohii,coffee
+455,紅茶,koucha,black tea
+456,ジュース,juusu,juice
+457,炭酸水,tansansui,sparkling water
+458,お菓子,okashi,snacks / sweets
+459,ケーキ,keeki,cake
+460,チョコレート,chokoreeto,chocolate
+461,アイス,aisu,ice cream
+462,弁当,bentou,lunch box
+463,おにぎり,onigiri,rice ball
+464,寿司,sushi,sushi
+465,刺身,sashimi,sashimi
+466,天ぷら,tenpura,tempura
+467,味,aji,taste
+468,甘い,amai,sweet
+469,辛い,karai,spicy
+470,しょっぱい,shoppai,salty
+471,酸っぱい,suppai,sour
+472,苦い,nigai,bitter
+473,美味しい,oishii,delicious
+474,まずい,mazui,bad-tasting
+475,温かい,atatakai,warm
+476,熱い,atsui,hot to touch / hot food
+477,冷たい,tsumetai,cold to touch / cold drink
+478,新鮮,shinsen,fresh
+479,古い,furui,old
+480,腐っています,kusatte imasu,rotten
+481,お腹が空きました,onaka ga sukimashita,I’m hungry
+482,喉が渇きました,nodo ga kawakimashita,I’m thirsty
+483,お腹いっぱい,onaka ippai,full stomach
+484,注文,chuumon,order
+485,メニュー,menyuu,menu
+486,会計,kaikei,bill / payment
+487,持ち帰り,mochikaeri,takeaway
+488,店内,tennai,eat in / inside shop
+489,辛さ,karasa,spice level
+490,普通,futsuu,normal
+491,大盛り,oomori,large serving
+492,少なめ,sukuname,less amount
+493,追加,tsuika,addition / extra
+494,無料,muryou,free
+495,有料,yuuryou,paid / charged
+496,アレルギー,arerugii,allergy
+497,肉なし,niku nashi,without meat
+498,卵なし,tamago nashi,without egg
+499,乳製品,nyuuseihin,dairy products
+500,ベジタリアン,bejitarian,vegetarian
