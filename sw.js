@@ -1,9 +1,10 @@
-const CACHE = "kotoba-v4";
+const CACHE = "kotoba-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=4",
-  "./app.js?v=4",
+  "./styles.css?v=5",
+  "./app.js?v=5",
+  "./supabase-config.js?v=5",
   "./vocab-manifest.json",
   "./manifest.webmanifest",
   "./icon.svg",

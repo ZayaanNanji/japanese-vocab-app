@@ -7,6 +7,10 @@ const state = {
   session: null,
   sound: true,
   progress: loadProgress(),
+  user: null,
+  supabase: null,
+  authMode: "signIn",
+  syncTimer: null,
 };
 
 const views = {
@@ -21,6 +25,7 @@ const $ = (selector) => document.querySelector(selector);
 async function init() {
   bindEvents();
   updateStreak(false);
+  initializeAuth();
   try {
     const manifest = await fetch("vocab-manifest.json").then(checkResponse).then((r) => r.json());
     state.collections = await Promise.all(
@@ -119,6 +124,16 @@ function bindEvents() {
   $("#finish-button").addEventListener("click", finishSession);
   $("#study-again-button").addEventListener("click", repeatSession);
   $("#sound-toggle").addEventListener("click", toggleSound);
+  $("#account-button").addEventListener("click", openAuthDialog);
+  $("#auth-close").addEventListener("click", closeAuthDialog);
+  $("#auth-config-close").addEventListener("click", closeAuthDialog);
+  $("#sign-in-tab").addEventListener("click", () => setAuthMode("signIn"));
+  $("#sign-up-tab").addEventListener("click", () => setAuthMode("signUp"));
+  $("#auth-form").addEventListener("submit", submitAuthForm);
+  $("#sign-out-button").addEventListener("click", signOut);
+  $("#auth-dialog").addEventListener("click", (event) => {
+    if (event.target === $("#auth-dialog")) closeAuthDialog();
+  });
   window.addEventListener("hashchange", routeFromHash);
   window.addEventListener("keydown", handleKeyboard);
 
@@ -503,14 +518,290 @@ function localDateKey(date) {
 
 function loadProgress() {
   try {
-    return { words: {}, streak: 0, ...JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") };
+    return loadStoredProgress(STORAGE_KEY);
   } catch {
-    return { words: {}, streak: 0 };
+    return emptyProgress();
   }
 }
 
 function saveProgress() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress));
+  const key = state.user ? `${STORAGE_KEY}:${state.user.id}` : STORAGE_KEY;
+  localStorage.setItem(key, JSON.stringify(state.progress));
+  if (state.user && state.supabase) scheduleCloudSync();
+}
+
+function emptyProgress() {
+  return { words: {}, streak: 0 };
+}
+
+function loadStoredProgress(key) {
+  try {
+    return { ...emptyProgress(), ...JSON.parse(localStorage.getItem(key) || "{}") };
+  } catch {
+    return emptyProgress();
+  }
+}
+
+async function initializeAuth() {
+  const config = window.KOTOBA_SUPABASE || {};
+  if (!config.url || !config.publishableKey) {
+    updateAccountUI();
+    return;
+  }
+
+  const libraryReady = await waitForSupabaseLibrary();
+  if (!libraryReady) {
+    console.warn("Supabase library could not be loaded. Continuing with local progress.");
+    updateAccountUI();
+    return;
+  }
+
+  state.supabase = window.supabase.createClient(config.url, config.publishableKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+  });
+
+  const { data, error } = await state.supabase.auth.getSession();
+  if (error) console.error("Could not restore account session:", error);
+  if (data?.session?.user) await handleSignedIn(data.session.user);
+  else updateAccountUI();
+
+  state.supabase.auth.onAuthStateChange((event, session) => {
+    setTimeout(() => {
+      if (event === "SIGNED_OUT" || !session?.user) handleSignedOut();
+      else if (event === "SIGNED_IN" && session.user.id !== state.user?.id) handleSignedIn(session.user);
+    }, 0);
+  });
+}
+
+async function waitForSupabaseLibrary() {
+  for (let attempt = 0; attempt < 40; attempt++) {
+    if (window.supabase?.createClient) return true;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  return false;
+}
+
+function isAuthConfigured() {
+  const config = window.KOTOBA_SUPABASE || {};
+  return Boolean(config.url && config.publishableKey && state.supabase);
+}
+
+function openAuthDialog() {
+  $("#auth-not-configured").hidden = isAuthConfigured();
+  $("#auth-signed-out").hidden = !isAuthConfigured() || Boolean(state.user);
+  $("#auth-signed-in").hidden = !isAuthConfigured() || !state.user;
+  $("#auth-error").textContent = "";
+  if (!$("#auth-dialog").open) $("#auth-dialog").showModal();
+}
+
+function closeAuthDialog() {
+  $("#auth-dialog").close();
+}
+
+function setAuthMode(mode) {
+  state.authMode = mode;
+  const signingUp = mode === "signUp";
+  $("#sign-in-tab").classList.toggle("active", !signingUp);
+  $("#sign-up-tab").classList.toggle("active", signingUp);
+  $("#auth-title").textContent = signingUp ? "Create your account" : "Welcome back";
+  $("#auth-copy").textContent = signingUp
+    ? "Create an account to sync your vocabulary progress across devices."
+    : "Sign in to continue your vocabulary progress on any device.";
+  $("#auth-submit").textContent = signingUp ? "Create account" : "Sign in";
+  $("#auth-password").autocomplete = signingUp ? "new-password" : "current-password";
+  $("#auth-error").textContent = "";
+  $("#auth-error").classList.remove("success-message");
+}
+
+async function submitAuthForm(event) {
+  event.preventDefault();
+  if (!state.supabase) return;
+  const email = $("#auth-email").value.trim();
+  const password = $("#auth-password").value;
+  const button = $("#auth-submit");
+  button.disabled = true;
+  button.textContent = state.authMode === "signUp" ? "Creating account…" : "Signing in…";
+  $("#auth-error").textContent = "";
+  $("#auth-error").classList.remove("success-message");
+
+  try {
+    if (state.authMode === "signUp") {
+      const { data, error } = await state.supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${location.origin}${location.pathname}` },
+      });
+      if (error) throw error;
+      if (!data.session) {
+        $("#auth-error").textContent = "Check your email to confirm your account, then sign in.";
+        $("#auth-error").classList.add("success-message");
+      } else {
+        closeAuthDialog();
+        showToast("Account created. Your progress is syncing.");
+      }
+    } else {
+      const { error } = await state.supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      closeAuthDialog();
+      showToast("Signed in. Your progress is synced.");
+    }
+  } catch (error) {
+    $("#auth-error").classList.remove("success-message");
+    $("#auth-error").textContent = friendlyAuthError(error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = state.authMode === "signUp" ? "Create account" : "Sign in";
+  }
+}
+
+function friendlyAuthError(message = "") {
+  if (message.toLowerCase().includes("invalid login")) return "Incorrect email or password.";
+  if (message.toLowerCase().includes("already registered")) return "An account with this email already exists.";
+  return message || "Something went wrong. Please try again.";
+}
+
+async function signOut() {
+  if (!state.supabase) return;
+  $("#sign-out-button").disabled = true;
+  await flushCloudSync();
+  const { error } = await state.supabase.auth.signOut();
+  $("#sign-out-button").disabled = false;
+  if (error) {
+    showToast("Could not sign out. Please try again.");
+    return;
+  }
+  closeAuthDialog();
+  showToast("Signed out. Local guest progress is active.");
+}
+
+async function handleSignedIn(user) {
+  if (!user || state.user?.id === user.id) return;
+  const guestProgress = loadStoredProgress(STORAGE_KEY);
+  const cachedProgress = loadStoredProgress(`${STORAGE_KEY}:${user.id}`);
+  state.user = user;
+  updateAccountUI();
+  setSyncStatus("Loading cloud progress…", "syncing");
+
+  const cloudProgress = await loadCloudProgress(user.id);
+  state.progress = mergeProgress(guestProgress, cachedProgress, cloudProgress);
+  updateStreak(false);
+  refreshProgressUI();
+  localStorage.setItem(`${STORAGE_KEY}:${user.id}`, JSON.stringify(state.progress));
+
+  const synced = await syncProgressToCloud();
+  if (synced) localStorage.removeItem(STORAGE_KEY);
+}
+
+function handleSignedOut() {
+  state.user = null;
+  clearTimeout(state.syncTimer);
+  state.syncTimer = null;
+  state.progress = loadStoredProgress(STORAGE_KEY);
+  updateStreak(false);
+  updateAccountUI();
+  refreshProgressUI();
+}
+
+async function loadCloudProgress(userId) {
+  try {
+    const { data, error } = await state.supabase
+      .from("user_progress")
+      .select("progress")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (error) throw error;
+    return data?.progress || emptyProgress();
+  } catch (error) {
+    console.error("Could not load cloud progress:", error);
+    setSyncStatus("Cloud load failed — using this device", "failed");
+    return emptyProgress();
+  }
+}
+
+function mergeProgress(...sources) {
+  const merged = emptyProgress();
+  const valid = sources.filter(Boolean);
+  for (const source of valid) {
+    merged.streak = Math.max(merged.streak || 0, source.streak || 0);
+    if ((source.lastStudyDate || "") > (merged.lastStudyDate || "")) {
+      merged.lastStudyDate = source.lastStudyDate;
+    }
+    for (const [id, progress] of Object.entries(source.words || {})) {
+      const current = merged.words[id] || {};
+      const dueDates = [current.due, progress.due].filter(Boolean).sort();
+      merged.words[id] = {
+        mastery: Math.max(current.mastery || 0, progress.mastery || 0),
+        seen: Math.max(current.seen || 0, progress.seen || 0),
+        correct: Math.max(current.correct || 0, progress.correct || 0),
+        due: dueDates[0] || null,
+      };
+    }
+  }
+  return merged;
+}
+
+function scheduleCloudSync() {
+  clearTimeout(state.syncTimer);
+  setSyncStatus("Syncing…", "syncing");
+  state.syncTimer = setTimeout(syncProgressToCloud, 700);
+}
+
+async function flushCloudSync() {
+  if (!state.syncTimer) return;
+  clearTimeout(state.syncTimer);
+  state.syncTimer = null;
+  await syncProgressToCloud();
+}
+
+async function syncProgressToCloud() {
+  if (!state.user || !state.supabase) return false;
+  state.syncTimer = null;
+  setSyncStatus("Syncing…", "syncing");
+  try {
+    const { error } = await state.supabase
+      .from("user_progress")
+      .upsert({
+        user_id: state.user.id,
+        progress: state.progress,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "user_id" });
+    if (error) throw error;
+    setSyncStatus("Progress synced", "synced");
+    return true;
+  } catch (error) {
+    console.error("Could not sync progress:", error);
+    setSyncStatus("Sync failed — saved on this device", "failed");
+    return false;
+  }
+}
+
+function refreshProgressUI() {
+  if (!state.collections.length) return;
+  renderHome();
+  if (state.currentCollection && views.collection.classList.contains("active")) {
+    openCollection(state.currentCollection.index, false);
+  }
+}
+
+function updateAccountUI() {
+  const email = state.user?.email || "";
+  const initial = email ? email[0].toUpperCase() : "人";
+  $("#account-avatar").textContent = initial;
+  $("#account-large-avatar").textContent = initial;
+  $("#account-label").textContent = state.user ? email.split("@")[0] : "Sign in";
+  $("#auth-user-email").textContent = email;
+  $("#auth-signed-out").hidden = Boolean(state.user);
+  $("#auth-signed-in").hidden = !state.user;
+}
+
+function setSyncStatus(message, status = "") {
+  const element = $("#sync-status");
+  element.textContent = message;
+  element.className = `sync-status ${status}`.trim();
 }
 
 function shuffle(items) {

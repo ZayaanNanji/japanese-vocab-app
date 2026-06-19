@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
   <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body>
@@ -31,6 +31,10 @@
         <button class="icon-button" id="sound-toggle" aria-label="Toggle sound">
           <span class="sound-on">♪</span>
           <span class="sound-off" hidden>×</span>
+        </button>
+        <button class="account-button" id="account-button">
+          <span class="account-avatar" id="account-avatar">人</span>
+          <span id="account-label">Sign in</span>
         </button>
       </div>
     </header>
@@ -181,7 +185,54 @@
     </main>
   </div>
 
+  <dialog id="auth-dialog" class="auth-dialog">
+    <button class="auth-close" id="auth-close" aria-label="Close">×</button>
+
+    <div id="auth-signed-out">
+      <p class="eyebrow">Cloud progress</p>
+      <h2 id="auth-title">Welcome back</h2>
+      <p class="auth-copy" id="auth-copy">Sign in to keep your progress synced across devices.</p>
+
+      <div class="auth-tabs" role="tablist" aria-label="Account action">
+        <button class="auth-tab active" id="sign-in-tab" type="button">Sign in</button>
+        <button class="auth-tab" id="sign-up-tab" type="button">Create account</button>
+      </div>
+
+      <form id="auth-form">
+        <label>
+          <span>Email</span>
+          <input id="auth-email" type="email" autocomplete="email" required placeholder="you@example.com">
+        </label>
+        <label>
+          <span>Password</span>
+          <input id="auth-password" type="password" autocomplete="current-password" minlength="6" required placeholder="At least 6 characters">
+        </label>
+        <p class="auth-error" id="auth-error" role="alert"></p>
+        <button class="primary-button auth-submit" id="auth-submit" type="submit">Sign in</button>
+      </form>
+      <p class="auth-note">Your vocabulary progress remains available locally when you are signed out.</p>
+    </div>
+
+    <div id="auth-signed-in" hidden>
+      <div class="account-large-avatar" id="account-large-avatar">人</div>
+      <p class="eyebrow">Signed in</p>
+      <h2>Your progress is synced</h2>
+      <p class="auth-email-display" id="auth-user-email"></p>
+      <p class="sync-status" id="sync-status">Cloud sync ready</p>
+      <button class="secondary-button auth-submit" id="sign-out-button" type="button">Sign out</button>
+    </div>
+
+    <div id="auth-not-configured" hidden>
+      <p class="eyebrow">Setup required</p>
+      <h2>Connect cloud accounts</h2>
+      <p class="auth-copy">Add your Supabase project URL and public key to <code>supabase-config.js</code>. The README contains the full setup steps.</p>
+      <button class="secondary-button auth-submit" id="auth-config-close" type="button">Got it</button>
+    </div>
+  </dialog>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="app.js?v=4" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js?v=5"></script>
+  <script src="app.js?v=5" type="module"></script>
 </body>
 </html>
