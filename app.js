@@ -38,7 +38,7 @@ async function init() {
     renderHome();
     routeFromHash();
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-      navigator.serviceWorker.register("sw.js").catch(() => {});
+      navigator.serviceWorker.register("sw.js?v=4").catch(() => {});
     }
   } catch (error) {
     console.error(error);
