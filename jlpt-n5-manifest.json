@@ -1,1 +1,79 @@
-[]
+[
+  {
+    "file": "JLPT_N5_pronouns_demonstratives_question_words.csv",
+    "title": "Pronouns & Question Words",
+    "subtitle": "Pronouns, demonstratives and essential question words",
+    "icon": "誰",
+    "accent": "#5472a0"
+  },
+  {
+    "file": "JLPT_N5_numbers_counters_time.csv",
+    "title": "Numbers & Time",
+    "subtitle": "Numbers, counters, dates and telling time",
+    "icon": "時",
+    "accent": "#d49a3a"
+  },
+  {
+    "file": "JLPT_N5_nouns_people_family.csv",
+    "title": "People & Family",
+    "subtitle": "People, family members and relationships",
+    "icon": "人",
+    "accent": "#e5664f"
+  },
+  {
+    "file": "JLPT_N5_nouns_places_transport_buildings.csv",
+    "title": "Places & Transport",
+    "subtitle": "Places, buildings, directions and transportation",
+    "icon": "駅",
+    "accent": "#4c8391"
+  },
+  {
+    "file": "JLPT_N5_nouns_objects_food_daily_life.csv",
+    "title": "Daily Life Nouns",
+    "subtitle": "Objects, food, the body and everyday life",
+    "icon": "物",
+    "accent": "#8c654e"
+  },
+  {
+    "file": "JLPT_N5_verbs.csv",
+    "title": "Essential Verbs",
+    "subtitle": "Core actions and verbs required for JLPT N5",
+    "icon": "動",
+    "accent": "#597b70"
+  },
+  {
+    "file": "JLPT_N5_i_adjectives.csv",
+    "title": "い-Adjectives",
+    "subtitle": "Common descriptive words ending in い",
+    "icon": "形",
+    "accent": "#b45d76"
+  },
+  {
+    "file": "JLPT_N5_na_adjectives.csv",
+    "title": "な-Adjectives",
+    "subtitle": "Common descriptive words used with な",
+    "icon": "静",
+    "accent": "#7b6ba8"
+  },
+  {
+    "file": "JLPT_N5_adverbs.csv",
+    "title": "Adverbs",
+    "subtitle": "Frequency, degree, manner and time expressions",
+    "icon": "副",
+    "accent": "#6b7f45"
+  },
+  {
+    "file": "JLPT_N5_particles_prepositions_grammar_words.csv",
+    "title": "Particles & Grammar",
+    "subtitle": "Essential particles and foundational grammar words",
+    "icon": "文",
+    "accent": "#c56f48"
+  },
+  {
+    "file": "JLPT_N5_conjunctions_expressions.csv",
+    "title": "Expressions & Conjunctions",
+    "subtitle": "Connectors, greetings and common expressions",
+    "icon": "話",
+    "accent": "#688497"
+  }
+]

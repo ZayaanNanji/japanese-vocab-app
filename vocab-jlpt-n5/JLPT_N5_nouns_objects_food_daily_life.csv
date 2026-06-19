@@ -1,0 +1,193 @@
+﻿No,Japanese,Romaji,Meaning
+1,頭,atama,head
+2,足,ashi,foot / leg
+3,手,te,hand
+4,口,kuchi,mouth
+5,歯,ha,tooth
+6,鼻,hana,nose
+7,耳,mimi,ear
+8,目,me,eye
+9,体,karada,body
+10,背,se,height / back
+11,おなか,onaka,stomach
+12,病気,byouki,illness
+13,薬,kusuri,medicine
+14,雨,ame,rain
+15,飴,ame,candy
+16,風,kaze,wind
+17,風邪,kaze,cold / flu
+18,雪,yuki,snow
+19,晴れ,hare,clear weather
+20,曇り,kumori,cloudy weather
+21,天気,tenki,weather
+22,春,haru,spring
+23,夏,natsu,summer
+24,秋,aki,autumn
+25,冬,fuyu,winter
+26,夏休み,natsuyasumi,summer holiday
+27,色,iro,color
+28,青,ao,blue
+29,赤,aka,red
+30,黄色,kiiro,yellow
+31,茶色,chairo,brown
+32,黒,kuro,black
+33,白,shiro,white
+34,緑,midori,green
+35,花,hana,flower
+36,木,ki,tree / wood
+37,鳥,tori,bird
+38,犬,inu,dog
+39,猫,neko,cat
+40,動物,doubutsu,animal
+41,魚,sakana,fish
+42,肉,niku,meat
+43,牛肉,gyuuniku,beef
+44,豚肉,butaniku,pork
+45,とり肉,toriniku,chicken meat
+46,卵,tamago,egg
+47,野菜,yasai,vegetable
+48,果物,kudamono,fruit
+49,食べ物,tabemono,food
+50,飲み物,nomimono,drink
+51,水,mizu,water
+52,お茶,ocha,green tea
+53,紅茶,koucha,black tea
+54,コーヒー,koohii,coffee
+55,牛乳,gyuunyuu,milk
+56,お酒,osake,alcohol / sake
+57,御飯,gohan,rice / meal
+58,朝御飯,asagohan,breakfast
+59,昼御飯,hirugohan,lunch
+60,晩御飯,bangohan,dinner
+61,夕飯,yuuhan,dinner
+62,パン,pan,bread
+63,カレー,karee,curry
+64,バター,bataa,butter
+65,砂糖,satou,sugar
+66,塩,shio,salt
+67,しょうゆ,shouyu,soy sauce
+68,お菓子,okashi,sweets
+69,たばこ,tabako,tobacco / cigarette
+70,本,hon,book
+71,本棚,hondana,bookshelf
+72,辞書,jisho,dictionary
+73,字引,jibiki,dictionary
+74,新聞,shinbun,newspaper
+75,雑誌,zasshi,magazine
+76,ノート,nooto,notebook
+77,手紙,tegami,letter
+78,葉書,hagaki,postcard
+79,封筒,fuutou,envelope
+80,切手,kitte,stamp
+81,切符,kippu,ticket
+82,地図,chizu,map
+83,写真,shashin,photo
+84,映画,eiga,movie
+85,音楽,ongaku,music
+86,歌,uta,song
+87,言葉,kotoba,word / language
+88,漢字,kanji,kanji
+89,英語,eigo,English language
+90,意味,imi,meaning
+91,質問,shitsumon,question
+92,問題,mondai,problem / question
+93,作文,sakubun,composition
+94,文章,bunshou,sentence / text
+95,宿題,shukudai,homework
+96,授業,jugyou,class / lesson
+97,練習,renshuu,practice
+98,勉強,benkyou,study
+99,仕事,shigoto,work / job
+100,買い物,kaimono,shopping
+101,旅行,ryokou,travel
+102,料理,ryouri,cooking / cuisine
+103,散歩,sanpo,walk
+104,結婚,kekkon,marriage
+105,電話,denwa,telephone
+106,テレビ,terebi,television
+107,ラジオ,rajio,radio
+108,ラジカセ,rajikase,radio cassette player
+109,ニュース,nyuusu,news
+110,時計,tokei,clock / watch
+111,電気,denki,electricity / light
+112,ストーブ,sutoobu,heater
+113,冷蔵庫,reizouko,refrigerator
+114,テープ,teepu,tape
+115,テーブル,teeburu,table
+116,机,tsukue,desk
+117,椅子,isu,chair
+118,ドア,doa,door
+119,戸,to,Japanese-style door
+120,窓,mado,window
+121,ベッド,beddo,bed
+122,布団,futon,futon
+123,鍵,kagi,key
+124,箱,hako,box
+125,かばん,kaban,bag
+126,財布,saifu,wallet
+127,お金,okane,money
+128,ポケット,poketto,pocket
+129,傘,kasa,umbrella
+130,靴,kutsu,shoes
+131,靴下,kutsushita,socks
+132,服,fuku,clothes
+133,洋服,youfuku,western clothes
+134,上着,uwagi,jacket
+135,背広,sebiro,business suit
+136,シャツ,shatsu,shirt
+137,ワイシャツ,waishatsu,business shirt
+138,ズボン,zubon,trousers
+139,スカート,sukaato,skirt
+140,セーター,seetaa,sweater
+141,コート,kooto,coat
+142,帽子,boushi,hat
+143,ネクタイ,nekutai,tie
+144,ハンカチ,hankachi,handkerchief
+145,眼鏡,megane,glasses
+146,紙,kami,paper
+147,鉛筆,enpitsu,pencil
+148,ペン,pen,pen
+149,ボールペン,boorupen,ballpoint pen
+150,万年筆,mannenhitsu,fountain pen
+151,ナイフ,naifu,knife
+152,フォーク,fooku,fork
+153,スプーン,supuun,spoon
+154,コップ,koppu,glass / cup
+155,カップ,kappu,cup
+156,お皿,osara,plate
+157,ちゃわん,chawan,rice bowl
+158,灰皿,haizara,ashtray
+159,花瓶,kabin,vase
+160,カメラ,kamera,camera
+161,フィルム,firumu,film
+162,レコード,rekoodo,record
+163,テープレコーダー,teepu rekoodaa,tape recorder
+164,エレベーター,erebeetaa,elevator
+165,プール,puuru,pool
+166,スポーツ,supootsu,sport
+167,ギター,gitaa,guitar
+168,マッチ,macchi,match
+169,ボタン,botan,button
+170,ポスト,posuto,postbox
+171,コピー,kopii,copy
+172,カレンダー,karendaa,calendar
+173,ペット,petto,pet
+174,スリッパ,surippa,slippers
+175,シャワー,shawaa,shower
+176,ふろ,furo,bath
+177,お弁当,obentou,boxed lunch
+178,荷物,nimotsu,luggage
+179,物,mono,thing
+180,ほか,hoka,other / rest
+181,先,saki,ahead / previous
+182,辺,hen,area
+183,所,tokoro,place
+184,年,toshi,year / age
+185,名前,namae,name
+186,声,koe,voice
+187,話,hanashi,talk / story
+188,たて,tate,height / length
+189,建物,tatemono,building
+190,角,kado,corner
+191,橋,hashi,bridge
+192,箸,hashi,chopsticks

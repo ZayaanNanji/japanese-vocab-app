@@ -34,7 +34,7 @@ async function init() {
     renderTracks();
     routeFromHash();
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-      navigator.serviceWorker.register("sw.js?v=4").catch(() => {});
+      navigator.serviceWorker.register("sw.js?v=7").catch(() => {});
     }
   } catch (error) {
     console.error(error);
