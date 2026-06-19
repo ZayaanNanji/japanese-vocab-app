@@ -35,6 +35,8 @@ The app uses Supabase for email/password authentication and per-user cloud progr
 
 This creates the `user_progress` table and row-level security policies. Those policies ensure each signed-in user can only access their own progress.
 
+If the table already exists, it is safe to run the complete SQL file again. The script also grants the required table privileges to signed-in users while denying anonymous database access.
+
 ### 2. Copy the public project configuration
 
 1. In Supabase, open **Project Settings → API**.

@@ -34,7 +34,7 @@ async function init() {
     renderTracks();
     routeFromHash();
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-      navigator.serviceWorker.register("sw.js?v=7").catch(() => {});
+      navigator.serviceWorker.register("sw.js?v=8").catch(() => {});
     }
   } catch (error) {
     console.error(error);
@@ -478,7 +478,6 @@ function renderQuiz(word) {
   const options = shuffle([word, ...distractors]);
   $("#quiz-japanese").textContent = word.japanese;
   $("#quiz-romaji").textContent = word.romaji;
-  $("#quiz-romaji").classList.add("hidden-answer");
   $("#quiz-options").innerHTML = options.map((option) =>
     `<button class="quiz-option" data-answer="${option.id}">${escapeHTML(option.meaning)}</button>`
   ).join("");
@@ -490,7 +489,6 @@ function renderQuiz(word) {
 function answerQuiz(button, correct) {
   if (state.session.answered || state.session.transitioning) return;
   state.session.answered = true;
-  $("#quiz-romaji").classList.remove("hidden-answer");
   $("#quiz-options").querySelectorAll(".quiz-option").forEach((option) => {
     option.disabled = true;
     if (Number(option.dataset.answer) === currentWord().id) option.classList.add("correct");

@@ -544,7 +544,6 @@ h2 { margin-bottom: 8px; font-size: 1.55rem; letter-spacing: -.025em; }
 }
 
 .quiz-prompt .romaji-word { color: var(--muted); }
-.hidden-answer { opacity: 0; }
 .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
 .quiz-option { min-height: 70px; padding: 13px 18px; border: 1px solid var(--line); color: var(--ink); background: rgba(255,254,250,.75); border-radius: 16px; cursor: pointer; transition: transform .18s ease, border .18s ease, background .18s ease; }
 .quiz-option:hover { transform: translateY(-2px); border-color: rgba(36,51,47,.3); }
