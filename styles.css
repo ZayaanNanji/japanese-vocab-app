@@ -149,6 +149,35 @@ main { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 42px 0 80
 .view { display: none; animation: view-in .45s cubic-bezier(.2,.8,.2,1); }
 .view.active { display: block; }
 
+.tracks-header { max-width: 760px; margin: 48px 0 46px; }
+.tracks-header h1 { margin-bottom: 20px; }
+.tracks-header > p:last-child { color: var(--muted); font-size: 1.08rem; }
+.track-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.track-card {
+  position: relative;
+  min-height: 290px;
+  padding: 34px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  background: rgba(255,254,250,.78);
+  border-radius: 30px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease;
+}
+.track-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+.track-icon { display: grid; place-items: center; width: 72px; height: 72px; margin-bottom: 44px; color: var(--white); background: var(--accent); border-radius: 21px; font-family: "Noto Sans JP"; font-size: 2rem; }
+.track-card h2 { font-size: 2rem; }
+.track-card p { max-width: 440px; margin-bottom: 28px; color: var(--muted); line-height: 1.55; }
+.track-footer { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.track-progress { flex: 1; }
+.track-progress span { display: block; margin-bottom: 7px; color: var(--muted); font-size: .72rem; }
+.track-arrow { font-size: 1.4rem; }
+.empty-collections { grid-column: 1 / -1; padding: 42px; border: 1px dashed var(--line); background: rgba(255,254,250,.5); border-radius: var(--radius); text-align: center; }
+.empty-collections h3 { margin: 0 0 8px; }
+.empty-collections p { margin: 0; color: var(--muted); }
+
 @keyframes view-in {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
@@ -629,6 +658,9 @@ h2 { margin-bottom: 8px; font-size: 1.55rem; letter-spacing: -.025em; }
   .stat-ring strong { font-size: 1.55rem; }
   .quick-practice { align-items: stretch; flex-direction: column; margin: 18px 0 50px; }
   .collection-grid { grid-template-columns: 1fr; }
+  .track-grid { grid-template-columns: 1fr; }
+  .tracks-header { margin-top: 24px; }
+  .track-card { min-height: 250px; padding: 26px; }
   .collection-card { min-height: 128px; padding: 20px; gap: 15px; }
   .collection-icon { width: 60px; height: 60px; border-radius: 17px; font-size: 1.65rem; }
   .collection-header { align-items: stretch; flex-direction: column; gap: 25px; }

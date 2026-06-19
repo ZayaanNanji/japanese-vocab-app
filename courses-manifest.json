@@ -1,0 +1,22 @@
+[
+  {
+    "id": "general",
+    "title": "General Japanese",
+    "subtitle": "Build a practical foundation with 1,000 useful everyday words.",
+    "eyebrow": "Core vocabulary course",
+    "icon": "日",
+    "accent": "#e5664f",
+    "folder": "vocab",
+    "manifest": "vocab-manifest.json"
+  },
+  {
+    "id": "jlpt-n5",
+    "title": "JLPT N5 Vocabulary",
+    "subtitle": "Study beginner vocabulary specifically for the JLPT N5 exam.",
+    "eyebrow": "JLPT preparation",
+    "icon": "五",
+    "accent": "#5472a0",
+    "folder": "vocab-jlpt-n5",
+    "manifest": "jlpt-n5-manifest.json"
+  }
+]

@@ -1,7 +1,8 @@
-const VOCAB_PATH = "vocab/";
 const STORAGE_KEY = "kotoba-progress-v1";
 
 const state = {
+  courses: [],
+  currentCourse: null,
   collections: [],
   currentCollection: null,
   session: null,
@@ -14,6 +15,7 @@ const state = {
 };
 
 const views = {
+  tracks: document.querySelector("#tracks-view"),
   home: document.querySelector("#home-view"),
   collection: document.querySelector("#collection-view"),
   study: document.querySelector("#study-view"),
@@ -27,20 +29,9 @@ async function init() {
   updateStreak(false);
   initializeAuth();
   try {
-    const manifest = await fetch("vocab-manifest.json").then(checkResponse).then((r) => r.json());
-    state.collections = await Promise.all(
-      manifest.map(async (meta, index) => {
-        const text = await fetch(`${VOCAB_PATH}${meta.file}`).then(checkResponse).then((r) => r.text());
-        const words = parseCSV(text).map((row) => ({
-          id: Number(row.No),
-          japanese: row.Japanese,
-          romaji: row.Romaji,
-          meaning: row.Meaning,
-        }));
-        return { ...meta, index, words, start: words[0]?.id, end: words.at(-1)?.id };
-      })
-    );
-    renderHome();
+    const courseManifest = await fetch("courses-manifest.json").then(checkResponse).then((r) => r.json());
+    state.courses = await Promise.all(courseManifest.map(loadCourse));
+    renderTracks();
     routeFromHash();
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       navigator.serviceWorker.register("sw.js?v=4").catch(() => {});
@@ -54,6 +45,26 @@ async function init() {
         <p>Run this folder through a local web server or open the published GitHub Pages URL.</p></div>
       </div>`;
   }
+}
+
+async function loadCourse(courseMeta) {
+  const manifest = await fetch(courseMeta.manifest).then(checkResponse).then((r) => r.json());
+  const collections = await Promise.all(manifest.map(async (meta, index) => {
+    const text = await fetch(`${courseMeta.folder}/${meta.file}`).then(checkResponse).then((r) => r.text());
+    const collectionKey = meta.file.replace(/\.csv$/i, "");
+    const words = parseCSV(text).map((row, wordIndex) => {
+      const id = Number(row.No) || wordIndex + 1;
+      return {
+        id,
+        progressKey: courseMeta.id === "general" ? String(id) : `${collectionKey}:${id}`,
+        japanese: row.Japanese,
+        romaji: row.Romaji,
+        meaning: row.Meaning,
+      };
+    });
+    return { ...meta, index, key: collectionKey, words, start: words[0]?.id, end: words.at(-1)?.id };
+  }));
+  return { ...courseMeta, collections };
 }
 
 function checkResponse(response) {
@@ -102,6 +113,9 @@ function bindEvents() {
     const collectionCard = event.target.closest("[data-collection]");
     if (collectionCard) openCollection(Number(collectionCard.dataset.collection));
 
+    const trackCard = event.target.closest("[data-course]");
+    if (trackCard) openCourse(trackCard.dataset.course);
+
     const levelCard = event.target.closest("[data-level]");
     if (levelCard) startLevel(Number(levelCard.dataset.level));
 
@@ -109,7 +123,7 @@ function bindEvents() {
     if (rating) rateCard(rating.dataset.rating);
   });
 
-  $("#practice-all-button").addEventListener("click", () => startSession(state.currentCollection.words, "All 100"));
+  $("#practice-all-button").addEventListener("click", () => startSession(state.currentCollection.words, `All ${state.currentCollection.words.length}`));
   $("#smart-review-button").addEventListener("click", startSmartReview);
   $("#flashcard").addEventListener("click", (event) => {
     if (!event.target.closest(".speak-button")) flipCard();
@@ -148,39 +162,94 @@ function bindEvents() {
 }
 
 function navigate(route) {
-  location.hash = route === "home" ? "" : route;
-  if (!location.hash) routeFromHash();
+  if (route === "tracks") location.hash = "";
+  else if (route === "home" && state.currentCourse) location.hash = `course/${state.currentCourse.id}`;
+  else location.hash = route;
+  routeFromHash();
 }
 
 function routeFromHash() {
   const hash = location.hash.slice(1);
-  if (hash.startsWith("collection/") && state.collections.length) {
-    openCollection(Number(hash.split("/")[1]), false);
-  } else if (!hash || hash === "home") {
-    showView("home");
-    renderHome();
+  if (!state.courses.length) return;
+  if (hash.startsWith("collection/")) {
+    const [, courseId, collectionIndex] = hash.split("/");
+    if (selectCourse(courseId)) openCollection(Number(collectionIndex), false);
+  } else if (hash.startsWith("course/")) {
+    openCourse(hash.split("/")[1], false);
+  } else {
+    state.currentCourse = null;
+    state.collections = [];
+    state.currentCollection = null;
+    $("#streak-count").textContent = "–";
+    renderTracks();
+    showView("tracks");
   }
 }
 
-function showView(name) {
-  Object.entries(views).forEach(([key, view]) => view.classList.toggle("active", key === name));
-  window.scrollTo({ top: 0, behavior: "smooth" });
-  $("#main-content").focus({ preventScroll: true });
+function selectCourse(courseId) {
+  const course = state.courses.find((item) => item.id === courseId);
+  if (!course) return false;
+  state.currentCourse = course;
+  state.collections = course.collections;
+  state.currentCollection = null;
+  return true;
+}
+
+function openCourse(courseId, updateHash = true) {
+  if (!selectCourse(courseId)) return;
+  if (updateHash) history.pushState(null, "", `#course/${courseId}`);
+  updateStreak(false);
+  renderHome();
+  showView("home");
+}
+
+function renderTracks() {
+  $("#track-grid").innerHTML = state.courses.map((course) => {
+    const progress = courseProgress(course);
+    const total = course.collections.reduce((sum, collection) => sum + collection.words.length, 0);
+    return `
+      <button class="track-card" data-course="${escapeHTML(course.id)}" style="--accent:${course.accent}">
+        <span class="track-icon">${escapeHTML(course.icon)}</span>
+        <h2>${escapeHTML(course.title)}</h2>
+        <p>${escapeHTML(course.subtitle)}</p>
+        <span class="track-footer">
+          <span class="track-progress">
+            <span>${total ? `${total} words · ${progress}% mastered` : "Ready for vocabulary files"}</span>
+            <span class="progress-track"><span style="display:block;height:100%;width:${progress}%;background:var(--accent);border-radius:inherit"></span></span>
+          </span>
+          <span class="track-arrow">→</span>
+        </span>
+      </button>`;
+  }).join("");
 }
 
 function renderHome() {
-  const mastered = state.collections.flatMap((c) => c.words).filter((w) => wordProgress(w.id).mastery >= 3).length;
-  const total = state.collections.reduce((sum, c) => sum + c.words.length, 0) || 1000;
-  const percent = Math.round((mastered / total) * 100);
+  const course = state.currentCourse;
+  if (!course) return;
+  const mastered = state.collections.flatMap((c) => c.words).filter((w) => wordProgress(w).mastery >= 3).length;
+  const total = state.collections.reduce((sum, c) => sum + c.words.length, 0);
+  const percent = total ? Math.round((mastered / total) * 100) : 0;
+  $("#course-eyebrow").textContent = course.eyebrow;
+  $("#home-title").innerHTML = `${escapeHTML(course.title)}<br><em>vocabulary.</em>`;
+  $("#course-description").textContent = course.subtitle;
   $("#mastered-total").textContent = mastered;
   $("#overall-percent").textContent = `${percent}%`;
   $("#mastery-ring").style.setProperty("--progress", `${percent}%`);
-  $("#collection-count").textContent = `${state.collections.length} collections`;
+  $("#collection-count").textContent = `${state.collections.length} ${state.collections.length === 1 ? "collection" : "collections"}`;
 
   const due = getReviewWords().length;
   $("#review-summary").textContent = due
-    ? `${due} ${due === 1 ? "word is" : "words are"} ready for review.`
-    : "Choose a collection and learn ten words today.";
+    ? `${due} ${due === 1 ? "word is" : "words are"} ready for review in ${course.title}.`
+    : state.collections.length ? "Choose a collection and learn ten words today." : "Add vocabulary CSV files to begin this course.";
+
+  if (!state.collections.length) {
+    $("#collection-grid").innerHTML = `
+      <div class="empty-collections">
+        <h3>No vocabulary files added yet</h3>
+        <p>Add CSV files to <code>${escapeHTML(course.folder)}/</code> and list them in <code>${escapeHTML(course.manifest)}</code>.</p>
+      </div>`;
+    return;
+  }
 
   $("#collection-grid").innerHTML = state.collections.map((collection) => {
     const progress = collectionProgress(collection);
@@ -189,7 +258,7 @@ function renderHome() {
         <span class="collection-icon">${escapeHTML(collection.icon)}</span>
         <span>
           <h3>${escapeHTML(collection.title)}</h3>
-          <p>${escapeHTML(collection.subtitle)} · ${collection.start}–${collection.end}</p>
+          <p>${escapeHTML(collection.subtitle)} · ${collection.words.length} words</p>
           <span class="mini-progress">
             <span class="progress-track"><span style="display:block;height:100%;width:${progress}%;background:var(--accent);border-radius:inherit"></span></span>
             <span>${progress}%</span>
@@ -200,14 +269,29 @@ function renderHome() {
   }).join("");
 }
 
+function courseProgress(course) {
+  const words = course.collections.flatMap((collection) => collection.words);
+  if (!words.length) return 0;
+  const mastery = words.reduce((sum, word) => sum + Math.min(3, wordProgress(word, course.id).mastery), 0);
+  return Math.round((mastery / (words.length * 3)) * 100);
+}
+
+function showView(name) {
+  Object.entries(views).forEach(([key, view]) => view.classList.toggle("active", key === name));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  $("#main-content").focus({ preventScroll: true });
+}
+
 function openCollection(index, updateHash = true) {
   const collection = state.collections[index];
   if (!collection) return;
   state.currentCollection = collection;
-  if (updateHash) history.pushState(null, "", `#collection/${index}`);
+  updateStreak(false);
+  if (updateHash) history.pushState(null, "", `#collection/${state.currentCourse.id}/${index}`);
   $("#collection-range").textContent = `Words ${collection.start}–${collection.end}`;
   $("#collection-title").textContent = collection.title;
   $("#collection-description").textContent = collection.subtitle;
+  $("#practice-all-title").textContent = `Practice all ${collection.words.length}`;
   const progress = collectionProgress(collection);
   $("#collection-percent").textContent = `${progress}%`;
   $("#collection-progress-bar").style.width = `${progress}%`;
@@ -216,9 +300,10 @@ function openCollection(index, updateHash = true) {
 }
 
 function renderLevels(collection) {
-  $("#level-grid").innerHTML = Array.from({ length: 10 }, (_, level) => {
+  const levelCount = Math.ceil(collection.words.length / 10);
+  $("#level-grid").innerHTML = Array.from({ length: levelCount }, (_, level) => {
     const words = collection.words.slice(level * 10, level * 10 + 10);
-    const mastered = words.filter((word) => wordProgress(word.id).mastery >= 3).length;
+    const mastered = words.filter((word) => wordProgress(word).mastery >= 3).length;
     const preview = words.slice(0, 3).map((word) => word.japanese).join(" · ");
     return `
       <button class="level-card" data-level="${level}">
@@ -226,7 +311,7 @@ function renderLevels(collection) {
         <h3>${words[0]?.id}–${words.at(-1)?.id}</h3>
         <p>${escapeHTML(preview)}</p>
         <span class="level-footer">
-          <span>${mastered}/10 mastered</span>
+          <span>${mastered}/${words.length} mastered</span>
           <span class="level-dots">${Array.from({ length: 5 }, (_, i) => `<i class="${i < Math.ceil(mastered / 2) ? "filled" : ""}"></i>`).join("")}</span>
         </span>
       </button>`;
@@ -241,7 +326,7 @@ function startLevel(level) {
 function startSmartReview() {
   let words = getReviewWords();
   if (!words.length) {
-    words = state.collections.flatMap((c) => c.words).filter((w) => wordProgress(w.id).seen > 0);
+    words = state.collections.flatMap((c) => c.words).filter((w) => wordProgress(w).seen > 0);
   }
   if (!words.length) {
     showToast("Learn a level first to build your review queue.");
@@ -314,7 +399,7 @@ function rateCard(rating) {
 
 function recordResult(word, rating) {
   const scores = { again: 0, hard: 1, knew: 2 };
-  const previous = wordProgress(word.id);
+  const previous = wordProgress(word);
   let mastery = previous.mastery || 0;
   if (rating === "knew") mastery = Math.min(5, mastery + 1);
   if (rating === "hard") mastery = Math.max(1, mastery);
@@ -322,15 +407,15 @@ function recordResult(word, rating) {
   const intervals = [0, 1, 3, 7, 14, 30];
   const due = new Date();
   due.setDate(due.getDate() + intervals[mastery]);
-  state.progress.words[word.id] = {
+  activeCourseProgress().words[word.progressKey] = {
     mastery,
     seen: (previous.seen || 0) + 1,
     correct: (previous.correct || 0) + (rating === "knew" ? 1 : 0),
     due: due.toISOString().slice(0, 10),
   };
-  state.session.results.push({ id: word.id, rating, score: scores[rating] });
-  if (rating === "again" && !state.session.retries[word.id]) {
-    state.session.retries[word.id] = 1;
+  state.session.results.push({ key: word.progressKey, rating, score: scores[rating] });
+  if (rating === "again" && !state.session.retries[word.progressKey]) {
+    state.session.retries[word.progressKey] = 1;
     state.session.words.push(word);
   }
   saveProgress();
@@ -419,7 +504,7 @@ function completeSession() {
   $("#study-progress-bar").style.width = "100%";
   const results = state.session.results;
   const correct = results.filter((result) => result.rating === "knew").length;
-  const mastered = results.filter((result) => wordProgress(result.id).mastery >= 3).length;
+  const mastered = results.filter((result) => wordProgressByKey(result.key).mastery >= 3).length;
   $("#result-cards").textContent = results.length;
   $("#result-accuracy").textContent = `${Math.round((correct / Math.max(1, results.length)) * 100)}%`;
   $("#result-mastered").textContent = mastered;
@@ -476,20 +561,25 @@ function toggleSound() {
   showToast(state.sound ? "Pronunciation enabled" : "Pronunciation muted");
 }
 
-function wordProgress(id) {
-  return state.progress.words[id] || { mastery: 0, seen: 0, correct: 0, due: null };
+function wordProgress(word, courseId = state.currentCourse?.id) {
+  const key = typeof word === "object" ? word.progressKey : String(word);
+  return courseProgressData(courseId).words[key] || { mastery: 0, seen: 0, correct: 0, due: null };
+}
+
+function wordProgressByKey(key) {
+  return activeCourseProgress().words[key] || { mastery: 0, seen: 0, correct: 0, due: null };
 }
 
 function collectionProgress(collection) {
   if (!collection?.words.length) return 0;
-  const masteryPoints = collection.words.reduce((sum, word) => sum + Math.min(3, wordProgress(word.id).mastery), 0);
+  const masteryPoints = collection.words.reduce((sum, word) => sum + Math.min(3, wordProgress(word).mastery), 0);
   return Math.round((masteryPoints / (collection.words.length * 3)) * 100);
 }
 
 function getReviewWords() {
   const today = new Date().toISOString().slice(0, 10);
   return state.collections.flatMap((c) => c.words).filter((word) => {
-    const progress = wordProgress(word.id);
+    const progress = wordProgress(word);
     return progress.seen > 0 && (!progress.due || progress.due <= today || progress.mastery < 2);
   });
 }
@@ -500,16 +590,17 @@ function updateStreak(markToday) {
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayKey = localDateKey(yesterday);
-  const last = state.progress.lastStudyDate;
+  const progress = activeCourseProgress();
+  const last = progress.lastStudyDate;
 
   if (markToday && last !== todayKey) {
-    state.progress.streak = last === yesterdayKey ? (state.progress.streak || 0) + 1 : 1;
-    state.progress.lastStudyDate = todayKey;
+    progress.streak = last === yesterdayKey ? (progress.streak || 0) + 1 : 1;
+    progress.lastStudyDate = todayKey;
     saveProgress();
   } else if (!markToday && last && last !== todayKey && last !== yesterdayKey) {
-    state.progress.streak = 0;
+    progress.streak = 0;
   }
-  $("#streak-count").textContent = state.progress.streak || 0;
+  $("#streak-count").textContent = progress.streak || 0;
 }
 
 function localDateKey(date) {
@@ -531,15 +622,42 @@ function saveProgress() {
 }
 
 function emptyProgress() {
-  return { words: {}, streak: 0 };
+  return { courses: {} };
 }
 
 function loadStoredProgress(key) {
   try {
-    return { ...emptyProgress(), ...JSON.parse(localStorage.getItem(key) || "{}") };
+    return normalizeProgress(JSON.parse(localStorage.getItem(key) || "{}"));
   } catch {
     return emptyProgress();
   }
+}
+
+function normalizeProgress(progress = {}) {
+  if (progress.courses) return { courses: progress.courses };
+  if (progress.words || progress.streak || progress.lastStudyDate) {
+    return {
+      courses: {
+        general: {
+          words: progress.words || {},
+          streak: progress.streak || 0,
+          lastStudyDate: progress.lastStudyDate,
+        },
+      },
+    };
+  }
+  return emptyProgress();
+}
+
+function courseProgressData(courseId = state.currentCourse?.id || "general") {
+  state.progress.courses ||= {};
+  state.progress.courses[courseId] ||= { words: {}, streak: 0 };
+  state.progress.courses[courseId].words ||= {};
+  return state.progress.courses[courseId];
+}
+
+function activeCourseProgress() {
+  return courseProgressData(state.currentCourse?.id || "general");
 }
 
 async function initializeAuth() {
@@ -724,21 +842,25 @@ async function loadCloudProgress(userId) {
 
 function mergeProgress(...sources) {
   const merged = emptyProgress();
-  const valid = sources.filter(Boolean);
-  for (const source of valid) {
-    merged.streak = Math.max(merged.streak || 0, source.streak || 0);
-    if ((source.lastStudyDate || "") > (merged.lastStudyDate || "")) {
-      merged.lastStudyDate = source.lastStudyDate;
-    }
-    for (const [id, progress] of Object.entries(source.words || {})) {
-      const current = merged.words[id] || {};
-      const dueDates = [current.due, progress.due].filter(Boolean).sort();
-      merged.words[id] = {
-        mastery: Math.max(current.mastery || 0, progress.mastery || 0),
-        seen: Math.max(current.seen || 0, progress.seen || 0),
-        correct: Math.max(current.correct || 0, progress.correct || 0),
-        due: dueDates[0] || null,
-      };
+  for (const rawSource of sources.filter(Boolean)) {
+    const source = normalizeProgress(rawSource);
+    for (const [courseId, sourceCourse] of Object.entries(source.courses || {})) {
+      merged.courses[courseId] ||= { words: {}, streak: 0 };
+      const targetCourse = merged.courses[courseId];
+      targetCourse.streak = Math.max(targetCourse.streak || 0, sourceCourse.streak || 0);
+      if ((sourceCourse.lastStudyDate || "") > (targetCourse.lastStudyDate || "")) {
+        targetCourse.lastStudyDate = sourceCourse.lastStudyDate;
+      }
+      for (const [id, progress] of Object.entries(sourceCourse.words || {})) {
+        const current = targetCourse.words[id] || {};
+        const dueDates = [current.due, progress.due].filter(Boolean).sort();
+        targetCourse.words[id] = {
+          mastery: Math.max(current.mastery || 0, progress.mastery || 0),
+          seen: Math.max(current.seen || 0, progress.seen || 0),
+          correct: Math.max(current.correct || 0, progress.correct || 0),
+          due: dueDates[0] || null,
+        };
+      }
     }
   }
   return merged;
@@ -780,8 +902,8 @@ async function syncProgressToCloud() {
 }
 
 function refreshProgressUI() {
-  if (!state.collections.length) return;
-  renderHome();
+  if (state.courses.length) renderTracks();
+  if (state.currentCourse) renderHome();
   if (state.currentCollection && views.collection.classList.contains("active")) {
     openCollection(state.currentCollection.index, false);
   }

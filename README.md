@@ -94,9 +94,35 @@ After GitHub Pages deploys, open the website and use the **Sign in** button in t
 - Different accounts: each user has an isolated local cache and database row.
 - Temporary connection failure: learning continues locally and synchronization retries after later progress changes.
 
-## Add another vocabulary collection
+## Learning paths and progress
+
+The app contains two independent learning paths:
+
+- **General Japanese** uses the existing files in `vocab/`.
+- **JLPT N5 Vocabulary** uses files in `vocab-jlpt-n5/`.
+
+Mastery, streaks, review queues, and completion percentages are recorded separately for each path. Existing progress from older versions is automatically assigned to General Japanese.
+
+## Add a General Japanese collection
 
 1. Add a CSV to `vocab/` with the columns `No,Japanese,Romaji,Meaning`.
 2. Add one matching entry to `vocab-manifest.json`.
 
-The app generates the collection page and ten-word levels from the CSV data.
+## Add a JLPT N5 collection
+
+1. Add a CSV to `vocab-jlpt-n5/` with the columns `No,Japanese,Romaji,Meaning`.
+2. Add a matching entry to `jlpt-n5-manifest.json`.
+
+Example:
+
+```json
+{
+  "file": "jlpt_n5_001-100_core_nouns.csv",
+  "title": "Core Nouns",
+  "subtitle": "Essential JLPT N5 nouns",
+  "icon": "名",
+  "accent": "#5472a0"
+}
+```
+
+Collections may contain any number of words. The app automatically divides each CSV into levels of ten, with a smaller final level when necessary.

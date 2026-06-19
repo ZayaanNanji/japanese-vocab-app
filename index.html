@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
   <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body>
@@ -40,12 +40,22 @@
     </header>
 
     <main id="main-content" tabindex="-1">
-      <section id="home-view" class="view active" aria-labelledby="home-title">
+      <section id="tracks-view" class="view active" aria-labelledby="tracks-title">
+        <div class="tracks-header">
+          <p class="eyebrow">Japanese learning paths</p>
+          <h1 id="tracks-title">What do you want<br>to study?</h1>
+          <p>Each course keeps its mastery, reviews, and progress separate.</p>
+        </div>
+        <div id="track-grid" class="track-grid" aria-live="polite"></div>
+      </section>
+
+      <section id="home-view" class="view" aria-labelledby="home-title">
+        <button class="back-button" data-route="tracks"><span>←</span> All learning paths</button>
         <div class="hero">
           <div>
-            <p class="eyebrow">Your Japanese vocabulary journey</p>
+            <p class="eyebrow" id="course-eyebrow">Your Japanese vocabulary journey</p>
             <h1 id="home-title">Small steps.<br><em>Real progress.</em></h1>
-            <p class="hero-copy">Master 1,000 useful Japanese words, ten at a time.</p>
+            <p class="hero-copy" id="course-description"></p>
           </div>
           <div class="hero-stats">
             <div class="stat-ring" id="mastery-ring">
@@ -78,7 +88,7 @@
             <p class="eyebrow">Course library</p>
             <h2>Choose a collection</h2>
           </div>
-          <span id="collection-count">10 collections</span>
+          <span id="collection-count"></span>
         </div>
         <div id="collection-grid" class="collection-grid" aria-live="polite"></div>
       </section>
@@ -100,8 +110,8 @@
         <div class="practice-all-card">
           <div class="practice-all-icon">百</div>
           <div>
-            <h2>Practice all 100</h2>
-            <p>Mix every word in this collection for a full review.</p>
+            <h2 id="practice-all-title">Practice all words</h2>
+            <p id="practice-all-description">Mix every word in this collection for a full review.</p>
           </div>
           <button class="primary-button" id="practice-all-button">Start practice <span>→</span></button>
         </div>
@@ -232,7 +242,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-  <script src="supabase-config.js?v=5"></script>
-  <script src="app.js?v=5" type="module"></script>
+  <script src="supabase-config.js?v=6"></script>
+  <script src="app.js?v=6" type="module"></script>
 </body>
 </html>
