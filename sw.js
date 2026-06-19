@@ -1,4 +1,4 @@
-const CACHE = "kotoba-v1";
+const CACHE = "kotoba-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -35,14 +35,14 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   event.respondWith(
-    caches.match(event.request).then((cached) =>
-      cached || fetch(event.request).then((response) => {
+    fetch(event.request)
+      .then((response) => {
         if (response.ok && new URL(event.request.url).origin === location.origin) {
           const copy = response.clone();
           caches.open(CACHE).then((cache) => cache.put(event.request, copy));
         }
         return response;
       })
-    )
+      .catch(() => caches.match(event.request))
   );
 });

@@ -247,6 +247,7 @@ function startSession(words, label, mode = "flashcard") {
     results: [],
     retries: {},
     answered: false,
+    transitioning: false,
   };
   $("#study-kicker").textContent = state.currentCollection?.title || "Daily practice";
   $("#study-title").textContent = label;
@@ -263,30 +264,33 @@ function renderStudyCard() {
   const word = currentWord();
   if (!word) return completeSession();
   state.session.answered = false;
+  const card = $("#flashcard");
+  card.classList.add("resetting");
+  card.classList.remove("flipped");
+  card.getBoundingClientRect();
   const position = state.session.index + 1;
   const total = state.session.words.length;
   $("#study-counter").textContent = `${position} / ${total}`;
   $("#study-progress-bar").style.width = `${((position - 1) / total) * 100}%`;
   $("#card-japanese").textContent = word.japanese;
-  $("#card-japanese-back").textContent = word.japanese;
   $("#card-romaji").textContent = word.romaji;
   $("#card-meaning").textContent = word.meaning;
-  $("#flashcard").classList.remove("flipped");
   $("#rating-controls").classList.remove("enabled");
+  requestAnimationFrame(() => card.classList.remove("resetting"));
 
   if (state.session.mode === "quiz") renderQuiz(word);
   setTimeout(() => speak(word.japanese), 260);
 }
 
 function flipCard() {
-  if (!state.session || state.session.mode !== "flashcard") return;
+  if (!state.session || state.session.mode !== "flashcard" || state.session.transitioning) return;
   const card = $("#flashcard");
   card.classList.toggle("flipped");
   $("#rating-controls").classList.toggle("enabled", card.classList.contains("flipped"));
 }
 
 function rateCard(rating) {
-  if (!state.session || state.session.answered) return;
+  if (!state.session || state.session.answered || state.session.transitioning) return;
   if (state.session.mode === "flashcard" && !$("#flashcard").classList.contains("flipped")) return;
   state.session.answered = true;
   recordResult(currentWord(), rating);
@@ -318,24 +322,38 @@ function recordResult(word, rating) {
   updateStreak(true);
 }
 
-function animateNext() {
+async function animateNext() {
   const stage = state.session.mode === "quiz" ? $("#quiz-stage") : $("#flashcard-stage");
-  stage.animate(
+  state.session.transitioning = true;
+  const exitAnimation = stage.animate(
     [{ opacity: 1, transform: "translateX(0)" }, { opacity: 0, transform: "translateX(-24px)" }],
     { duration: 180, easing: "ease-in", fill: "forwards" }
-  ).finished.then(() => {
-    state.session.index++;
-    if (state.session.index >= state.session.words.length) {
-      stage.getAnimations().forEach((a) => a.cancel());
-      completeSession();
-      return;
-    }
-    renderStudyCard();
-    stage.animate(
-      [{ opacity: 0, transform: "translateX(24px)" }, { opacity: 1, transform: "translateX(0)" }],
-      { duration: 260, easing: "cubic-bezier(.2,.8,.2,1)" }
-    );
-  });
+  );
+  try {
+    await exitAnimation.finished;
+  } catch {
+    return;
+  }
+  exitAnimation.cancel();
+
+  state.session.index++;
+  if (state.session.index >= state.session.words.length) {
+    state.session.transitioning = false;
+    completeSession();
+    return;
+  }
+
+  renderStudyCard();
+  const enterAnimation = stage.animate(
+    [{ opacity: 0, transform: "translateX(24px)" }, { opacity: 1, transform: "translateX(0)" }],
+    { duration: 260, easing: "cubic-bezier(.2,.8,.2,1)" }
+  );
+  try {
+    await enterAnimation.finished;
+  } catch {
+    return;
+  }
+  state.session.transitioning = false;
 }
 
 function toggleMode() {
@@ -370,7 +388,7 @@ function renderQuiz(word) {
 }
 
 function answerQuiz(button, correct) {
-  if (state.session.answered) return;
+  if (state.session.answered || state.session.transitioning) return;
   state.session.answered = true;
   $("#quiz-romaji").classList.remove("hidden-answer");
   $("#quiz-options").querySelectorAll(".quiz-option").forEach((option) => {

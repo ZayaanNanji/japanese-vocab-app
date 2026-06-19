@@ -407,6 +407,7 @@ h2 { margin-bottom: 8px; font-size: 1.55rem; letter-spacing: -.025em; }
 }
 
 .flashcard.flipped { transform: rotateY(180deg); }
+.flashcard.resetting { transition: none; }
 
 .card-face {
   position: absolute;
@@ -445,7 +446,7 @@ h2 { margin-bottom: 8px; font-size: 1.55rem; letter-spacing: -.025em; }
 .japanese-word { font-family: "Noto Sans JP", sans-serif; font-size: clamp(3.2rem, 12vw, 6rem); font-weight: 500; line-height: 1.15; text-align: center; }
 .meaning-word { max-width: 90%; font-size: clamp(2rem, 7vw, 3.4rem); font-weight: 600; line-height: 1.2; text-align: center; }
 .romaji-word { margin-top: 16px; color: var(--coral); font-size: 1.3rem; }
-.japanese-small { margin-top: 22px; color: rgba(255,255,255,.5); font-family: "Noto Sans JP"; font-size: 1.2rem; }
+.card-front-romaji { color: var(--green); font-size: 1.25rem; font-weight: 500; letter-spacing: .02em; }
 .tap-hint { position: absolute; bottom: 24px; margin: 0; color: var(--muted); font-size: .75rem; }
 .card-back .tap-hint { color: rgba(255,255,255,.38); }
 
