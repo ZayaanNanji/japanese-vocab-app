@@ -1,10 +1,10 @@
-const CACHE = "kotoba-v8";
+const CACHE = "kotoba-v9";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=8",
-  "./app.js?v=8",
-  "./supabase-config.js?v=8",
+  "./styles.css?v=9",
+  "./app.js?v=9",
+  "./supabase-config.js?v=9",
   "./courses-manifest.json",
   "./jlpt-n5-manifest.json",
   "./vocab-manifest.json",
@@ -19,7 +19,8 @@ const APP_SHELL = [
   "./vocab/japanese_vocab_601-700_transport_directions_places.csv",
   "./vocab/japanese_vocab_701-800_body_health_feelings.csv",
   "./vocab/japanese_vocab_801-900_conversation_adjectives_descriptions.csv",
-  "./vocab/japanese_vocab_901-1000_work_school_admin_phone_emergencies.csv"
+  "./vocab/japanese_vocab_901-1000_work_school_admin_phone_emergencies.csv",
+  "./vocab-jlpt-n5/JLPT_N5_Kanji.csv"
 ];
 
 self.addEventListener("install", (event) => {

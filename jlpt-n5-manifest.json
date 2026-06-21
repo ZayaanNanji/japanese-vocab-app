@@ -14,6 +14,13 @@
     "accent": "#d49a3a"
   },
   {
+    "file": "JLPT_N5_Kanji.csv",
+    "title": "N5 Kanji",
+    "subtitle": "Essential JLPT N5 kanji, readings and meanings",
+    "icon": "漢",
+    "accent": "#3f665d"
+  },
+  {
     "file": "JLPT_N5_nouns_people_family.csv",
     "title": "People & Family",
     "subtitle": "People, family members and relationships",
