@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=10">
   <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body>
@@ -113,7 +113,10 @@
             <h2 id="practice-all-title">Practice all words</h2>
             <p id="practice-all-description">Mix every word in this collection for a full review.</p>
           </div>
-          <button class="primary-button" id="practice-all-button">Start practice <span>→</span></button>
+          <div class="collection-action-buttons">
+            <button class="list-button" id="view-words-button">View all words</button>
+            <button class="primary-button" id="practice-all-button">Start practice <span>→</span></button>
+          </div>
         </div>
         <div class="section-heading compact">
           <div>
@@ -122,6 +125,30 @@
           </div>
         </div>
         <div id="level-grid" class="level-grid"></div>
+      </section>
+
+      <section id="word-list-view" class="view word-list-view" aria-labelledby="word-list-title">
+        <button class="back-button" id="word-list-back"><span>←</span> Back to levels</button>
+        <div class="word-list-header">
+          <div>
+            <p class="eyebrow" id="word-list-kicker">Complete vocabulary list</p>
+            <h1 id="word-list-title">All words</h1>
+            <p id="word-list-summary"></p>
+          </div>
+          <label class="word-search">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="word-search-input" type="search" placeholder="Search Japanese, romaji or meaning…" autocomplete="off">
+          </label>
+        </div>
+        <div class="word-list-columns" aria-hidden="true">
+          <span>No.</span>
+          <span>Japanese</span>
+          <span>Romaji</span>
+          <span>Meaning</span>
+          <span>Status</span>
+        </div>
+        <div id="word-list-groups" class="word-list-groups"></div>
+        <p id="word-list-empty" class="word-list-empty" hidden>No words match your search.</p>
       </section>
 
       <section id="study-view" class="view study-view" aria-labelledby="study-title">
@@ -242,7 +269,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-  <script src="supabase-config.js?v=9"></script>
-  <script src="app.js?v=9" type="module"></script>
+  <script src="supabase-config.js?v=10"></script>
+  <script src="app.js?v=10" type="module"></script>
 </body>
 </html>

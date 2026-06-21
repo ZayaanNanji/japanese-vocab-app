@@ -18,6 +18,7 @@ const views = {
   tracks: document.querySelector("#tracks-view"),
   home: document.querySelector("#home-view"),
   collection: document.querySelector("#collection-view"),
+  wordList: document.querySelector("#word-list-view"),
   study: document.querySelector("#study-view"),
   complete: document.querySelector("#complete-view"),
 };
@@ -34,7 +35,7 @@ async function init() {
     renderTracks();
     routeFromHash();
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-      navigator.serviceWorker.register("sw.js?v=9").catch(() => {});
+      navigator.serviceWorker.register("sw.js?v=10").catch(() => {});
     }
   } catch (error) {
     console.error(error);
@@ -121,9 +122,18 @@ function bindEvents() {
 
     const rating = event.target.closest("[data-rating]");
     if (rating) rateCard(rating.dataset.rating);
+
+    const speakWord = event.target.closest("[data-speak-word]");
+    if (speakWord && state.currentCollection) {
+      const word = state.currentCollection.words[Number(speakWord.dataset.speakWord)];
+      if (word) speak(word.japanese);
+    }
   });
 
   $("#practice-all-button").addEventListener("click", () => startSession(state.currentCollection.words, `All ${state.currentCollection.words.length}`));
+  $("#view-words-button").addEventListener("click", () => openWordList(state.currentCollection.index));
+  $("#word-list-back").addEventListener("click", () => openCollection(state.currentCollection.index));
+  $("#word-search-input").addEventListener("input", (event) => renderWordList(event.target.value));
   $("#smart-review-button").addEventListener("click", startSmartReview);
   $("#flashcard").addEventListener("click", (event) => {
     if (!event.target.closest(".speak-button")) flipCard();
@@ -171,7 +181,10 @@ function navigate(route) {
 function routeFromHash() {
   const hash = location.hash.slice(1);
   if (!state.courses.length) return;
-  if (hash.startsWith("collection/")) {
+  if (hash.startsWith("words/")) {
+    const [, courseId, collectionIndex] = hash.split("/");
+    if (selectCourse(courseId)) openWordList(Number(collectionIndex), false);
+  } else if (hash.startsWith("collection/")) {
     const [, courseId, collectionIndex] = hash.split("/");
     if (selectCourse(courseId)) openCollection(Number(collectionIndex), false);
   } else if (hash.startsWith("course/")) {
@@ -297,6 +310,67 @@ function openCollection(index, updateHash = true) {
   $("#collection-progress-bar").style.width = `${progress}%`;
   renderLevels(collection);
   showView("collection");
+}
+
+function openWordList(index, updateHash = true) {
+  const collection = state.collections[index];
+  if (!collection) return;
+  state.currentCollection = collection;
+  updateStreak(false);
+  if (updateHash) history.pushState(null, "", `#words/${state.currentCourse.id}/${index}`);
+  $("#word-list-kicker").textContent = state.currentCourse.title;
+  $("#word-list-title").textContent = collection.title;
+  $("#word-list-summary").textContent = `${collection.words.length} words · ${Math.ceil(collection.words.length / 10)} levels`;
+  $("#word-search-input").value = "";
+  renderWordList();
+  showView("wordList");
+}
+
+function renderWordList(query = "") {
+  if (!state.currentCollection) return;
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  const matches = state.currentCollection.words
+    .map((word, index) => ({ word, index }))
+    .filter(({ word }) => {
+      if (!normalizedQuery) return true;
+      return [word.japanese, word.romaji, word.meaning, String(word.id)]
+        .some((value) => value.toLocaleLowerCase().includes(normalizedQuery));
+    });
+
+  const groups = new Map();
+  for (const entry of matches) {
+    const level = Math.floor(entry.index / 10) + 1;
+    if (!groups.has(level)) groups.set(level, []);
+    groups.get(level).push(entry);
+  }
+
+  $("#word-list-groups").innerHTML = [...groups.entries()].map(([level, entries]) => `
+    <section class="word-level-group">
+      <div class="word-level-heading">
+        <span>Level ${level}</span>
+        <small>Words ${(level - 1) * 10 + 1}–${Math.min(level * 10, state.currentCollection.words.length)}</small>
+      </div>
+      <div class="word-rows">
+        ${entries.map(({ word, index }) => {
+          const progress = wordProgress(word);
+          const status = progress.mastery >= 3 ? "Mastered" : progress.seen > 0 ? "Learning" : "New";
+          const statusClass = status.toLowerCase();
+          return `
+            <article class="word-row">
+              <span class="word-number">${escapeHTML(word.id)}</span>
+              <span class="word-japanese">
+                <strong>${escapeHTML(word.japanese)}</strong>
+                <button class="word-speak" data-speak-word="${index}" aria-label="Hear ${escapeHTML(word.japanese)}">♪</button>
+              </span>
+              <span class="word-romaji">${escapeHTML(word.romaji)}</span>
+              <span class="word-meaning">${escapeHTML(word.meaning)}</span>
+              <span class="word-status ${statusClass}">${status}</span>
+            </article>`;
+        }).join("")}
+      </div>
+    </section>
+  `).join("");
+  $("#word-list-empty").hidden = matches.length > 0;
 }
 
 function renderLevels(collection) {
